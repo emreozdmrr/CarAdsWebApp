@@ -1,4 +1,5 @@
-﻿using CarAdsWebApp.Entities;
+﻿using CarAdsWebApp.DataAccess.Configurations;
+using CarAdsWebApp.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -20,7 +21,7 @@ namespace CarAdsWebApp.DataAccess.Contexts
             modelBuilder.ApplyConfiguration(new AdvertisementConfiguration());
             modelBuilder.ApplyConfiguration(new AppRoleConfiguration());
             modelBuilder.ApplyConfiguration(new AppUserConfiguration());
-            modelBuilder.ApplyConfiguration(new AppUserRoleConfiguration());
+            modelBuilder.ApplyConfiguration(new CityConfiguration());
             modelBuilder.ApplyConfiguration(new MakeConfiguration());
             modelBuilder.ApplyConfiguration(new MessageConfiguration());
             modelBuilder.ApplyConfiguration(new ModelConfiguration());
@@ -31,6 +32,7 @@ namespace CarAdsWebApp.DataAccess.Contexts
         public DbSet<AppRole> AppRoles { get; set; }
         public DbSet<AppUser> AppUsers { get; set; }
         public DbSet<AppUserRole> AppUserRoles { get; set; }
+        public DbSet<City> Cities { get; set; }
         public DbSet<Make> Makes { get; set; }
         public DbSet<Message> Messages { get; set; }
         public DbSet<Model> Models { get; set; }

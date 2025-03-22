@@ -17,7 +17,8 @@ namespace CarAdsWebApp.Entities
         public Make Make { get; set; }
         public int ModelId { get; set; }
         public Model Model { get; set; }
-        public string City { get; set; }
+        public int CityId { get; set; }
+        public City City { get; set; }
         public int Year { get; set; }
         public decimal Price { get; set; }
         public string ImageUrl { get; set; }

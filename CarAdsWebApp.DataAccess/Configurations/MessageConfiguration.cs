@@ -13,8 +13,8 @@ namespace CarAdsWebApp.DataAccess.Configurations
     {
         public void Configure(EntityTypeBuilder<Message> builder)
         {
-            builder.HasOne(x => x.Sender).WithMany(x => x.Messages).HasForeignKey(x => x.SenderId);
-            builder.HasOne(x => x.Received).WithMany(x => x.Messages).HasForeignKey(x => x.ReceivedId);
+            builder.HasOne(x => x.Sender).WithMany(x => x.SentMessages).HasForeignKey(x => x.SenderId).OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(x => x.Receiver).WithMany(x => x.ReceivedMessages).HasForeignKey(x => x.ReceiverId).OnDelete(DeleteBehavior.Restrict);
             builder.Property(x => x.Description).HasMaxLength(400).IsRequired();
         }
     }

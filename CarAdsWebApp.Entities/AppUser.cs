@@ -16,6 +16,7 @@ namespace CarAdsWebApp.Entities
         public string PhoneNumber { get; set; }
         public List<AppUserRole> UserRoles { get; set; }
         public List<Advertisement> Advertisements { get; set; }
-        public List<Message> Messages { get; set; }
+        public List<Message> SentMessages { get; set; }
+        public List<Message> ReceivedMessages { get; set; }
     }
 }

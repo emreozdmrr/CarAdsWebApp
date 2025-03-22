@@ -10,8 +10,8 @@ namespace CarAdsWebApp.Entities
     {
         public int SenderId { get; set; }
         public AppUser Sender { get; set; }
-        public int ReceivedId { get; set; }
-        public AppUser Received { get; set; }
+        public int ReceiverId { get; set; }
+        public AppUser Receiver { get; set; }
         public string Description { get; set; }
         public DateTime MessageDate { get; set; } = DateTime.Now;
     }

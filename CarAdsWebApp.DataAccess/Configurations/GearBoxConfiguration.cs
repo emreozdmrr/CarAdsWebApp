@@ -14,6 +14,24 @@ namespace CarAdsWebApp.DataAccess.Configurations
         public void Configure(EntityTypeBuilder<GearBox> builder)
         {
             builder.Property(x => x.Definition).HasMaxLength(50).IsRequired();
+            builder.HasData(new GearBox[]
+            {
+                new GearBox
+                {
+                    Id=1,
+                    Definition="Manuel"
+                },
+                new GearBox
+                {
+                    Id=2,
+                    Definition="Otomatik"
+                },
+                new GearBox
+                {
+                    Id =3,
+                    Definition="Yarı Otomatik"
+                }
+            });
         }
     }
 }

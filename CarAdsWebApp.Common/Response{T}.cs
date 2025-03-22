@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CarAdsWebApp.Common
 {
-    public class Response<T>:Response
+    public class Response<T>:Response, IResponse<T>
     {
         public T Data { get; set; }
         public List<CustomValidationError> ValidationErrors { get; set; }

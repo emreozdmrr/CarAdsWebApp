@@ -14,6 +14,19 @@ namespace CarAdsWebApp.DataAccess.Configurations
         public void Configure(EntityTypeBuilder<AppRole> builder)
         {
             builder.Property(x => x.Definition).HasMaxLength(50).IsRequired();
+            builder.HasData(new AppRole[]
+            {
+                new AppRole
+                {
+                    Id=1,
+                    Definition="Admin"
+                },
+                new AppRole
+                {
+                    Id = 2,
+                    Definition = "User"
+                }
+            });
         }
     }
 }

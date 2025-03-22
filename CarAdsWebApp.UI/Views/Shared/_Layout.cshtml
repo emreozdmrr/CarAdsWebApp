@@ -1,0 +1,76 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CarAds</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+        .content {
+            min-height: 100%;
+            display: flex;
+            flex-direction: column;
+            background-color:darkgrey;
+        }
+        .card{
+            background-color: antiquewhite;
+            margin-top: 5px;
+        }
+        .main-content {
+            flex: 1;
+        }
+        .main-image {
+            height: 500px;
+            background: url('images/wallpaper.jpg') no-repeat center center;
+            background-size: cover;
+        }
+        .navbar {
+            margin-bottom: 1px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="content">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-brand" href="#">Araba İlanları</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#">Ana Sayfa</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Araba İlanları</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Giriş Yap</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Üye Ol</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <div class="main-image">
+        </div>
+
+       
+        @RenderBody()
+    </div>
+
+    <footer class="bg-dark text-white text-center py-3">
+        <p>&copy; Tüm hakları saklıdır.</p>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

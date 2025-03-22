@@ -3,11 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35303.130
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarAdsWebApp.Common", "CarAdsWebApp.Common\CarAdsWebApp.Common.csproj", "{804EBCE2-B3E8-405A-98A3-FFB5427CA39A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CarAdsWebApp.Common", "CarAdsWebApp.Common\CarAdsWebApp.Common.csproj", "{804EBCE2-B3E8-405A-98A3-FFB5427CA39A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarAdsWebApp.Entities", "CarAdsWebApp.Entities\CarAdsWebApp.Entities.csproj", "{56AF4015-2B9D-4898-B8B1-06B035B878DC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CarAdsWebApp.Entities", "CarAdsWebApp.Entities\CarAdsWebApp.Entities.csproj", "{56AF4015-2B9D-4898-B8B1-06B035B878DC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarAdsWebApp.DataAccess", "CarAdsWebApp.DataAccess\CarAdsWebApp.DataAccess.csproj", "{5E028AF3-F5BB-4CC8-9D42-D7637842CE6D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CarAdsWebApp.DataAccess", "CarAdsWebApp.DataAccess\CarAdsWebApp.DataAccess.csproj", "{5E028AF3-F5BB-4CC8-9D42-D7637842CE6D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarAdsWebApp.Business", "CarAdsWebApp.Business\CarAdsWebApp.Business.csproj", "{188DB080-C176-4C8E-BD60-EA2A0A08CA0C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarAdsWebApp.UI", "CarAdsWebApp.UI\CarAdsWebApp.UI.csproj", "{C983877B-E7C7-4731-95C5-435636DC4278}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarAdsWebApp.Dtos", "CarAdsWebApp.Dtos\CarAdsWebApp.Dtos.csproj", "{C916DDB9-DE90-4118-9DF6-475772C75D7A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +33,18 @@ Global
 		{5E028AF3-F5BB-4CC8-9D42-D7637842CE6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5E028AF3-F5BB-4CC8-9D42-D7637842CE6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5E028AF3-F5BB-4CC8-9D42-D7637842CE6D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{188DB080-C176-4C8E-BD60-EA2A0A08CA0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{188DB080-C176-4C8E-BD60-EA2A0A08CA0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{188DB080-C176-4C8E-BD60-EA2A0A08CA0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{188DB080-C176-4C8E-BD60-EA2A0A08CA0C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C983877B-E7C7-4731-95C5-435636DC4278}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C983877B-E7C7-4731-95C5-435636DC4278}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C983877B-E7C7-4731-95C5-435636DC4278}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C983877B-E7C7-4731-95C5-435636DC4278}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C916DDB9-DE90-4118-9DF6-475772C75D7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C916DDB9-DE90-4118-9DF6-475772C75D7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C916DDB9-DE90-4118-9DF6-475772C75D7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C916DDB9-DE90-4118-9DF6-475772C75D7A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
