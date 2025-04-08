@@ -1,0 +1,41 @@
+﻿@model UserCreateModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="mt-4">
+    <form asp-action="SignUp" asp-controller="User" method="post" class="p-4 w-25 mx-auto">
+       <div class="mb-3">
+           <label>Ad: </label>
+           <input asp-for="@Model.Firstname" class="form-control"/>
+       </div>
+        <div class="mb-3">
+            <label>Soyad: </label>
+            <input asp-for="@Model.Surname" class="form-control" />
+        </div>
+        <div class="mb-3">
+           <label>Kullanıcı Adı: </label>
+           <input asp-for="@Model.Username" class="form-control"/>
+       </div>
+        <div class="mb-3">
+            <label>Telefon: </label>
+            <input asp-for="@Model.PhoneNumber" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label>Mail: </label>
+            <input asp-for="@Model.Email" class="form-control" type="email" />
+        </div>
+        <div class="mb-3">
+            <label>Şifre: </label>
+            <input asp-for="@Model.Password" class="form-control" type="password" />
+        </div>
+        <div class="mb-3 text-end">
+            <button type="submit" class="btn btn-primary">Üye Ol</button>
+        </div>
+        <div class="text-danger" asp-validation-summary="All">
+
+        </div>
+    </form>
+</div>
+
+
