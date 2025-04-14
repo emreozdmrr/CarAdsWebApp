@@ -20,7 +20,9 @@ namespace CarAdsWebApp.Business.Helpers
                 new GearBoxProfile(),
                 new MakeProfile(),
                 new MessageProfile(),
-                new ModelProfile()
+                new ModelProfile(),
+                new AppRoleProfile(),
+                new AdvertisementProfile(),
             };
         }
     }

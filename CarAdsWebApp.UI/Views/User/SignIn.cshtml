@@ -3,15 +3,17 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="mt-4">
-    <form asp-action="SignIn" asp-controller="User" method="post" class="p-4 w-25 mx-auto">
-        
+<div class="mt-5">
+    <form asp-action="SignIn" asp-controller="User" method="post" class=" mt-5 p-4 w-25 mx-auto border border-success rounded bg-light">
+      <div class="mb-3">
+          <label class="form-label fw-bold fs-5 d-block text-center">HOŞGELDİNİZ</label>
+      </div>
         <div class="mb-3">
-            <label>Kullanıcı Adı: </label>
+            <label class="form-label">Kullanıcı Adı: </label>
             <input asp-for="@Model.Username" class="form-control" />
         </div>
         <div class="mb-3">
-            <label>Şifre: </label>
+            <label class="form-label">Şifre: </label>
             <input asp-for="@Model.Password" class="form-control" type="password" />
         </div>
         <div class="form-check">
@@ -20,8 +22,8 @@
                 Beni Hatırla
             </label>
         </div>
-        <div class="mb-3 text-end">
-            <button type="submit" class="btn btn-primary">Giriş Yap</button>
+        <div class="m-3 text-center">
+            <button type="submit" class="btn btn-primary btn-lg w-100">Giriş Yap</button>
         </div>
         <div class="text-danger" asp-validation-summary="All">
         </div>

@@ -1,0 +1,93 @@
+﻿@model List<AdvertisementListDto>
+@{
+	Layout = "_Layout";
+}
+
+
+
+<div class="container">
+
+
+	@{
+		if (Model?.Count > 0)
+		{
+			<div class="text-end my-3 p-1">
+				<a class="btn btn-primary" asp-action="CreateAdvertisement" asp-controller="Advertisement">Yeni İlan Ver</a>
+			</div>
+			<table class="mt-3 table table-sm table-hover table-striped table-bordered" style="border-radius:20px; overflow:hidden;">
+				<thead>
+					<tr>
+						<th class="col-8 px-3">Resim</th>
+						<th class="col-8">İlan Başlık</th>
+						<th class="col-8">Yayınlanma Tarihi</th>
+						<th class="col-8">Marka</th>
+						<th class="col-8">Model</th>
+						<th class="col-8">Fiyat</th>
+						<th class="col-8">İşlem</th>
+						<th class="col-8"></th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach (var advertisement in Model)
+					{
+						<tr>
+							<td class="align-middle p-3"><img src="@advertisement.ImageUrl" class="img-thumbnail img-fluid w-50" alt="..." /></td>
+							<td class="align-middle">@advertisement.Title</td>
+							<td class="align-middle">@advertisement.CreatedDate.ToString("dd-MM-yyyy")</td>
+							<td class="align-middle">@advertisement.Make.Definition</td>
+							<td class="align-middle">@advertisement.Model.Definition</td>
+							<td class="align-middle">@advertisement.Price.ToString("C2")</td>
+							<td class="align-middle">
+								<a class="btn btn-primary btn-sm" asp-action="UpdateAdvertisement" asp-controller="Advertisement" asp-route-advertisementId="@advertisement.Id" asp-route-appUserId="@User.Identity.Name">Düzenle</a>
+							</td>
+							<td class="align-middle px-3">
+								<button id="setStatusButton_@advertisement.Id" class="btn btn-danger btn-sm setStatusButton">Yayından Kaldır</button>
+							</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+		}
+		else
+		{
+			<div class="my-3 p-1 text-end">
+				<a class="btn btn-primary" asp-action="CreateAdvertisement" asp-controller="Advertisement">Yeni İlan Ver</a>
+			</div>
+			<div class="mt-3 text-center lead">
+				İlan bulunamadı.
+			</div>
+		}
+	}
+	<div class="mt-3 lead" asp-validation-summary="All">
+	</div>
+</div>
+
+@section script {
+	<script>
+
+		$(document).ready(function () {
+			$(document).on('click', '.setStatusButton', function () {
+
+				var advertisementId = $(this).attr('id').split('_')[1];
+				var result = confirm("İlanı yayından kaldırmak istediğinize emin misiniz?");
+
+				if (result) {
+					$.ajax({
+						url: '/Advertisement/SetStatus',
+						type: 'GET',
+						data: { advertisementId: advertisementId },
+						success: function (response) {
+							alert("başarılı!");
+							window.location.href = response.redirectUrl;
+						}
+					});
+				}
+				else {
+					alert("işlem iptal edildi.");
+				}
+			});
+		});
+	</script>
+}
+
+

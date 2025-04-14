@@ -4,7 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CarAds</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/autonumeric@4.5.0/dist/autoNumeric.min.js"></script>
+
+
     <style>
         html, body {
             height: 100%;
@@ -24,8 +29,8 @@
             flex: 1;
         }
         .main-image {
-            height: 500px;
-            background: url('images/wallpaper.jpg') no-repeat center center;
+            height: 350px;
+            background: url('/images/wallpaper.jpg') no-repeat center center;
             background-size: cover;
         }
         .navbar {
@@ -37,24 +42,41 @@
 
     <div class="content">
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <a class="navbar-brand" href="#">Araba İlanları</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <a class="navbar-brand ms-3" href="#">Araba İlanları</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item active">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item active me-3">
                         <a class="nav-link" href="#">Ana Sayfa</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item me-3">
                         <a class="nav-link" href="#">Araba İlanları</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Giriş Yap</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Üye Ol</a>
-                    </li>
+                    @{
+                        if (!User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item me-3">
+                                <a class="nav-link" asp-action="SignIn" asp-controller="User">Giriş Yap</a>
+                            </li>
+                            <li class="nav-item me-3">
+                                <a class="nav-link" asp-action="SignUp" asp-controller="User">Üye Ol</a>
+                            </li>
+                        }
+                        else
+                        {
+                            if (User.IsInRole("User"))
+                            {
+                                <li class="nav-item me-3">
+                                    <a class="nav-link" asp-action="ListByUserId" asp-controller="Advertisement" asp-route-userId="">İlanlarım</a>
+                                </li>
+                            }
+                            <li class="nav-item me-3">
+                                <a class="nav-link" asp-action="LogOut" asp-controller="User">Çıkış Yap</a>
+                            </li>
+                        }
+                    }
                 </ul>
             </div>
         </nav>
@@ -70,7 +92,7 @@
         <p>&copy; Tüm hakları saklıdır.</p>
     </footer>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+    @RenderSection("script", required:false)
+
 </body>
 </html>

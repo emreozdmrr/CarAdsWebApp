@@ -33,6 +33,7 @@ namespace CarAdsWebApp.Business.DependencyResolvers.Microsoft
 
             services.AddTransient<IValidator<AppUserCreateDto>, AppUserCreateDtoValidator>();
             services.AddTransient<IValidator<AppUserUpdateDto>, AppUserUpdateDtoValidator>();
+            services.AddTransient<IValidator<AppUserLoginDto>, AppUserLoginDtoValidator>();
             services.AddTransient<IValidator<BodyTypeUpdateDto>, BodyTypeUpdateDtoValidator>();
             services.AddTransient<IValidator<BodyTypeCreateDto>, BodyTypeCreateDtoValidator>();
             services.AddTransient<IValidator<GearBoxUpdateDto>, GearBoxUpdateDtoValidator>();
@@ -45,6 +46,8 @@ namespace CarAdsWebApp.Business.DependencyResolvers.Microsoft
             services.AddTransient<IValidator<ModelCreateDto>, ModelCreateDtoValidator>();
             services.AddTransient<IValidator<CityUpdateDto>, CityUpdateDtoValidator>();
             services.AddTransient<IValidator<CityCreateDto>, CityCreateDtoValidator>();
+            services.AddTransient<IValidator<AdvertisementCreateDto>, AdvertisementCreateDtoValidator>();
+            services.AddTransient<IValidator<AdvertisementUpdateDto>, AdvertisementUpdateDtoValidator>();
 
             services.AddScoped<IAppUserService, AppUserService>(); 
             services.AddScoped<IBodyTypeService, BodyTypeService>();
@@ -53,6 +56,7 @@ namespace CarAdsWebApp.Business.DependencyResolvers.Microsoft
             services.AddScoped<IMessageService, MessageService>();
             services.AddScoped<IModelService, ModelService>();
             services.AddScoped<ICityService, CityService>();
+            services.AddScoped<IAdvertisementService,AdvertisementService>();
         }
     }
 }

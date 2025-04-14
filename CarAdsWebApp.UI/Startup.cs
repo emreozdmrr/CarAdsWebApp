@@ -1,6 +1,11 @@
 using AutoMapper;
 using CarAdsWebApp.Business.DependencyResolvers.Microsoft;
 using CarAdsWebApp.Business.Helpers;
+using CarAdsWebApp.UI.Mappings.AutoMapper;
+using CarAdsWebApp.UI.Models;
+using CarAdsWebApp.UI.ValidationRules;
+using FluentValidation;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -14,49 +19,72 @@ using System.Threading.Tasks;
 
 namespace CarAdsWebApp.UI
 {
-    public class Startup
-    {
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
-        
-        public IConfiguration Configuration { get; set; }
+	public class Startup
+	{
+		// This method gets called by the runtime. Use this method to add services to the container.
+		// For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
 
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
+		public IConfiguration Configuration { get; set; }
 
-        public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddDependencies(Configuration);
-            services.AddControllersWithViews();
+		public Startup(IConfiguration configuration)
+		{
+			Configuration = configuration;
+		}
 
-            var profiles = ProfileHelper.GetProfiles();
+		public void ConfigureServices(IServiceCollection services)
+		{
+			services.AddDependencies(Configuration);
+			services.AddTransient<IValidator<UserCreateModel>, UserCreateModelValidator>();
+			services.AddTransient<IValidator<AdvertisementCreateModel>, AdvertisementCreateModelValidator>();
+			services.AddTransient<IValidator<AdvertisementUpdateModel>, AdvertisementUpdateModelValidator>();
 
-            var configuration = new MapperConfiguration(opt =>
-            {
-                opt.AddProfiles(profiles);
-            });
+			services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(opt =>
+			{
+				opt.Cookie.Name = "CustomCookie";
+				opt.Cookie.HttpOnly = true;
+				opt.Cookie.SameSite = SameSiteMode.Strict;
+				opt.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+				opt.ExpireTimeSpan = TimeSpan.FromDays(10);
+				opt.LoginPath = new PathString("/User/SignIn");
+				opt.LogoutPath = new PathString("/User/LogOut");
+				opt.AccessDeniedPath = new PathString("/User/AccessDenied");
+			});
 
-            var mapper = configuration.CreateMapper();
-            services.AddSingleton(mapper);
-        }
+			services.AddControllersWithViews();
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-        {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            
-            app.UseStaticFiles();
-            app.UseRouting();
+			var profiles = ProfileHelper.GetProfiles();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapDefaultControllerRoute();
-            });
-        }
-    }
+			profiles.Add(new UserCreateModelProfile());
+			profiles.Add(new  AdvertisementCreateModelProfile());
+			profiles.Add(new AdvertisementUpdateModelProfile());
+
+			var configuration = new MapperConfiguration(opt =>
+			{
+				opt.AddProfiles(profiles);
+			});
+
+			var mapper = configuration.CreateMapper();
+			services.AddSingleton(mapper);
+		}
+
+		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+		{
+			if (env.IsDevelopment())
+			{
+				app.UseDeveloperExceptionPage();
+			}
+
+			app.UseStaticFiles();
+			app.UseRouting();
+
+			app.UseAuthentication();
+			app.UseAuthorization();
+
+			app.UseEndpoints(endpoints =>
+			{
+				endpoints.MapDefaultControllerRoute();
+			});
+		}
+	}
 }

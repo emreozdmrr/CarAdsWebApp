@@ -10,7 +10,7 @@ namespace CarAdsWebApp.Dtos
     public class ModelListDto:IDto
     {
         public int Id { get; set; }
-        public string Definion { get; set; }
+        public string Definition { get; set; }
         public int MakeId { get; set; }
     }
 }

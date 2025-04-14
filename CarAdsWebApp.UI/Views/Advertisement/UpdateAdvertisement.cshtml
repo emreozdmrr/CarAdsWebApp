@@ -1,0 +1,167 @@
+﻿@model AdvertisementUpdateModel
+
+@{
+	Layout = "_Layout";
+}
+
+<div class="container mt-3 mb-1 p-4 rounded-lg d-flex justify-content-center">
+	<label class="font-weight-bold h4 text-primary">İLAN DÜZENLEME</label>
+</div>
+
+<div class="container my-3 py-2 rounded-lg d-flex justify-content-center">
+	<form id="advertisementForm" class="w-75 bg-light px-5 py-3" style="border-radius:50px; overflow:hidden;" asp-action="UpdateAdvertisement" asp-controller="Advertisement" method="post" enctype="multipart/form-data">
+		<input type="hidden" asp-for="@Model.AppUserId" />
+		<input type="hidden" asp-for="@Model.Id" />
+		<input type="hidden" asp-for="@Model.CreatedDate" />
+		<input type="hidden" asp-for="@Model.currentImageUrl" /> 
+		<div class="mt-3">
+			<label class="form-label">İlan Başlık</label>
+			<input type="text" class="form-control" asp-for="@Model.Title" />
+		</div>
+		<div class="mb-3">
+			<label class="form-label">Marka</label>
+			<select name="MakeId" asp-items="ViewBag.Makes" class="form-control" asp-for="@Model.MakeId">
+				<option value="">Marka seçiniz.</option>
+			</select>
+		</div>
+		<div class="mb-3">
+			<label class="form-label">Model</label>
+			<select name="ModelId" asp-for="@Model.ModelId" class="form-control">
+				<option value="">Marka seçininiz.</option>
+			</select>
+		</div>
+		<div class="mb-3">
+			<label class="form-label">Model Yılı</label>
+			<input type="number" class="form-control" asp-for=@Model.Year />
+		</div>
+		<div class="mb-3">
+			<label class="form-label">Fiyat</label>
+			<input type="text" id="Price" class="form-control" asp-for="@Model.Price" />
+		</div>
+		<div class="mb-3">
+			<label class="form-label">İlan Açıklaması</label>
+			<textarea class="form-control" asp-for="@Model.Description"></textarea>
+		</div>
+		<div class="mb-3">
+			<label class="form-label">Şehir</label>
+			<select name="CityId" asp-for="@Model.CityId" class="form-control" asp-items="ViewBag.Cities">
+				<option value="">Şehir seçiniz.</option>
+			</select>
+		</div>
+		<div class="mb-3">
+			<label class="form-label">Kasa Tipi</label>
+			<select name="BodyTypeId" class="form-control" asp-for="@Model.BodyTypeId" asp-items="ViewBag.BodyTypes">
+				<option value="">Kasa Tipi seçiniz.</option>
+			</select>
+		</div>
+		<div class="mb-3">
+			<label class="form-label">Vites Türü</label>
+			<select name="GearBoxId" class="form-control" asp-for="@Model.GearBoxId" asp-items="ViewBag.GearBoxes">
+				<option value="">Vites Türü seçiniz.</option>
+			</select>
+		</div>
+		<div class="mb-3">
+			<label class="form-label">Resim Yükleyiniz</label>
+			<input type="file" class="form-control-file" asp-for="@Model.ImageUrl" name="ImageUrl" onchange="setPreview(event)" />
+		</div>
+		<div class="mb-3">
+			<label class="form-label">Mevcut Resim</label>
+			<img id="preview" src="" class="img-thumbnail img-fluid w-50" asp-for="@Model.currentImageUrl" style="display:none" />
+		</div>
+		<div class="mb-3 text-end">
+			<button type="submit" class="btn btn-success btn-lg">Değişiklikleri Kaydet</button>
+		</div>
+		<div class="mb-3 bg-warning" asp-validation-summary="All">
+		</div>
+	</form>
+</div>
+
+
+@section script {
+	<script>
+		$(document).ready(function () {
+			$("#MakeId").change(function () {
+				var makeId = $(this).val();
+				if (makeId) {
+					$.ajax({
+						url: '/Advertisement/GetModelsByMakeId',
+						type: 'GET',
+						data: { makeId: makeId },
+						success: function (models) {
+							var modelSelect = $("#ModelId");
+							modelSelect.empty();
+							modelSelect.append('<option value="">Model Seçin</option>');
+							if (models && models.length > 0) {
+								$.each(models, function (index, model) {
+									modelSelect.append('<option value="' + model.id + '">' + model.definition + '</option>');
+								});
+							}
+						}
+					});
+				} else {
+					$("#ModelId").empty();
+					$("#ModelId").append('<option value="">Önce Marka seçiniz.</option>');
+				}
+			});
+
+			var selectedMakeId = '@Model.MakeId';
+				if (selectedMakeId) {
+					$.ajax({
+						url: '/Advertisement/GetModelsByMakeId',
+						type: 'GET',
+						data: { makeId: selectedMakeId },
+						success: function (models) {
+							var modelSelect = $("#ModelId");
+							modelSelect.empty();
+							modelSelect.append('<option value="">Model Seçin</option>');
+							if (models && models.length > 0) {
+								$.each(models, function (index, model) {
+									modelSelect.append('<option value="' + model.id + '">' + model.definition + '</option>');
+								});
+							}
+							if ('@Model.ModelId') {
+								$('#ModelId').val('@Model.ModelId');
+							}
+						}
+					});
+				}
+
+			var price = new AutoNumeric('#Price', {
+				currencySymbol: '₺',
+				decimalCharacter: ',',
+				digitGroupSeparator: '.',
+				decimalPlaces: 2
+			});
+
+			$('#advertisementForm').submit(function (e) {
+
+				console.log("form submit ediliyor");
+				var _price = price.get();
+
+				console.log(_price);
+				console.log($('#Price').val());
+				$('#Price').val(_price);
+			});
+
+		});
+
+		if ('@Model.currentImageUrl') {
+			preview.src = "@Model.currentImageUrl";
+			preview.style.display = 'block';
+			preview.val = '@Model.currentImageUrl';
+		}
+
+
+		function setPreview(event){
+			var preview = document.getElementById('preview');
+			if (event.target.files[0]) {
+				var reader = new FileReader();
+				reader.onload = function () {
+					preview.src = reader.result;
+					preview.style.display = 'block';
+				}
+				reader.readAsDataURL(event.target.files[0]);
+			}
+		}
+	</script>
+}

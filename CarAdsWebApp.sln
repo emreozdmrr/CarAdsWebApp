@@ -9,11 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CarAdsWebApp.Entities", "Ca
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CarAdsWebApp.DataAccess", "CarAdsWebApp.DataAccess\CarAdsWebApp.DataAccess.csproj", "{5E028AF3-F5BB-4CC8-9D42-D7637842CE6D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarAdsWebApp.Business", "CarAdsWebApp.Business\CarAdsWebApp.Business.csproj", "{188DB080-C176-4C8E-BD60-EA2A0A08CA0C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CarAdsWebApp.Business", "CarAdsWebApp.Business\CarAdsWebApp.Business.csproj", "{188DB080-C176-4C8E-BD60-EA2A0A08CA0C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarAdsWebApp.UI", "CarAdsWebApp.UI\CarAdsWebApp.UI.csproj", "{C983877B-E7C7-4731-95C5-435636DC4278}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CarAdsWebApp.UI", "CarAdsWebApp.UI\CarAdsWebApp.UI.csproj", "{C983877B-E7C7-4731-95C5-435636DC4278}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarAdsWebApp.Dtos", "CarAdsWebApp.Dtos\CarAdsWebApp.Dtos.csproj", "{C916DDB9-DE90-4118-9DF6-475772C75D7A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CarAdsWebApp.Dtos", "CarAdsWebApp.Dtos\CarAdsWebApp.Dtos.csproj", "{C916DDB9-DE90-4118-9DF6-475772C75D7A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

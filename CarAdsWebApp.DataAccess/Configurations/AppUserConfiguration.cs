@@ -19,6 +19,7 @@ namespace CarAdsWebApp.DataAccess.Configurations
             builder.Property(x => x.PhoneNumber).HasMaxLength(20).IsRequired();
             builder.Property(x => x.Password).HasMaxLength(8).IsRequired();
             builder.Property(x => x.Email).HasMaxLength(50).IsRequired();
+            builder.HasIndex(x=>x.Username).IsUnique();
         }
     }
 }

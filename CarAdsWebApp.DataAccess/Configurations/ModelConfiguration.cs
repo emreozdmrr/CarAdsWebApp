@@ -13,7 +13,7 @@ namespace CarAdsWebApp.DataAccess.Configurations
     {
         public void Configure(EntityTypeBuilder<Model> builder)
         {
-            builder.Property(x => x.Definion).HasMaxLength(50).IsRequired();
+            builder.Property(x => x.Definition).HasMaxLength(50).IsRequired();
             builder.HasOne(x => x.Make).WithMany(x => x.Models).HasForeignKey(x => x.MakeId);
         }
     }

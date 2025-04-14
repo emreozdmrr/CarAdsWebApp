@@ -13,7 +13,7 @@ namespace CarAdsWebApp.Business.ValidationRules
         public ModelCreateDtoValidator()
         {
             RuleFor(x=>x.MakeId).NotEmpty();
-            RuleFor(x => x.Definion).NotEmpty();
+            RuleFor(x => x.Definition).NotEmpty();
         }
     }
 }

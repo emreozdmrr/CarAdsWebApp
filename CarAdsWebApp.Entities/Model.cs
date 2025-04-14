@@ -8,7 +8,7 @@ namespace CarAdsWebApp.Entities
 {
     public class Model:BaseEntity
     {
-        public string Definion { get; set; }
+        public string Definition { get; set; }
         public int MakeId { get; set; }
 
         public Make Make { get; set; }

@@ -1,4 +1,5 @@
-﻿using CarAdsWebApp.Dtos;
+﻿using CarAdsWebApp.Common;
+using CarAdsWebApp.Dtos;
 using CarAdsWebApp.Entities;
 using System;
 using System.Collections.Generic;
@@ -10,5 +11,7 @@ namespace CarAdsWebApp.Business.Interfaces
 {
     public interface IModelService:IService<ModelCreateDto,ModelUpdateDto,ModelListDto,Model>
     {
-    }
+		Task<IResponse<List<ModelListDto>>> GetModelsByMakeIdAsync(int makeId);
+
+	}
 }
