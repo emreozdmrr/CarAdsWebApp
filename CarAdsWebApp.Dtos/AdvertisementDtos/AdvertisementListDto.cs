@@ -1,5 +1,4 @@
-﻿using CarAdsWebApp.Dtos.GearBoxDtos;
-using CarAdsWebApp.Dtos.Interfaces;
+﻿using CarAdsWebApp.Dtos.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,5 +29,5 @@ namespace CarAdsWebApp.Dtos
 		public GearBoxListDto GearBox { get; set; }
 		public int AppUserId { get; set; }
 		public AppUserListDto AppUser { get; set; }
-	}
+    }
 }

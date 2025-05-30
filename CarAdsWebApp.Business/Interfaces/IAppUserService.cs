@@ -14,5 +14,6 @@ namespace CarAdsWebApp.Business.Interfaces
         Task<IResponse<AppUserCreateDto>> CreateUserWithRoleAsync(AppUserCreateDto dto, int roleId);
         Task<IResponse<AppUserListDto>> CheckUserAsync(AppUserLoginDto dto);
         Task<IResponse<List<AppRoleListDto>>> GetRolesByUserIdAsync(int userId);
-    }
+        Task<IResponse<AppUserListDto>> GetUserByIdAsync(int userId);
+	}
 }

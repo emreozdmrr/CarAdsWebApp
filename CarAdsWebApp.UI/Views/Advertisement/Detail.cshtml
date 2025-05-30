@@ -1,0 +1,70 @@
+﻿@model AdvertisementListDto
+
+@{
+	Layout = "_Layout";
+}
+
+<div class="container mt-3">
+	<div class="row fs-2" style="background:linear-gradient(45deg,black,transparent); color:white; padding:20px;">
+		<span>@Model.Title</span>
+	</div>
+	<div class="row" style="color: white; background: linear-gradient(45deg,black,transparent);">
+		<div class="col-md-4">
+			<div class="mb-3" style="padding:20px;">
+				<img src="@Model.ImageUrl" class="img-fluid" />
+			</div>
+		</div>
+		<div class="col-md-5">
+			<div class="my-3">
+				<p class="fs-3">@Model.Price TL</p>
+			</div>
+			<div class="mb-3 mt-4">
+				<p>İlan No: @Model.Id</p>
+			</div>
+			<div class="mb-3">
+				<p>Şehir: @Model.City.Definition</p>
+			</div>
+			<div class="mb-3">
+				<p>Marka: @Model.Make.Definition </p>
+			</div>
+
+			<div class="mb-3">
+				<p>Model: @Model.Model.Definition</p>
+			</div>
+			<div class="mb-3">
+				<p>Yıl: @Model.Year</p>
+			</div>
+			<div class="mb-3">
+				<p>Kasa Tipi: @Model.BodyType.Definition</p>
+			</div>
+			<div class="mb-3">
+				<p>Vites Tipi: @Model.GearBox.Definition</p>
+			</div>
+		</div>
+		<div class="col-md-3">
+			<div class="rounded mt-3" style="background:white; color:black; padding:20px;">
+				<h5>@Model.AppUser.Firstname @Model.AppUser.Surname</h5>
+				<p>@Model.AppUser.PhoneNumber</p>
+				@if(User.Identity.IsAuthenticated && ViewBag.AppUserId != null)
+				{
+					if(ViewBag.AppUserId != Model.AppUserId)
+					{
+						<a asp-action="MessageDetails" asp-controller="Message" asp-route-advertisementId="@Model.Id" asp-route-toUserId="@Model.AppUser.Id" class="btn btn-primary">Mesaj Gönder</a>
+					}
+				}
+				else
+				{
+					<a asp-action="MessageDetails" asp-controller="Message" asp-route-advertisementId="@Model.Id" asp-route-toUserId="@Model.AppUser.Id" class="btn btn-primary">Mesaj Gönder</a>
+				}
+			</div>
+		</div>
+	</div>
+	<div class="rounded" style="background-color:white;">
+		<div class="fs-2 my-3 p-3 lead text-center">
+			<p class="border-bottom">Açıklama</p>
+		</div>
+		<div class="fs-5 my-3 p-3 text-center">
+			<p>@Model.Description</p>
+		</div>
+	</div>
+</div>

@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using CarAdsWebApp.Dtos;
-using CarAdsWebApp.Dtos.GearBoxDtos;
 using CarAdsWebApp.Entities;
 using System;
 using System.Collections.Generic;

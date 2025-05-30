@@ -28,5 +28,6 @@ namespace CarAdsWebApp.Entities
         public GearBox GearBox { get; set; }
         public int AppUserId { get; set; }
         public AppUser AppUser { get; set; }
+        public List<Message> Messages { get; set; }
     }
 }

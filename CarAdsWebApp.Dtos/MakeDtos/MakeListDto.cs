@@ -11,5 +11,7 @@ namespace CarAdsWebApp.Dtos
     {
         public int Id { get; set; }
         public string Definition { get; set; }
+        public List<AdvertisementListDto> Advertisements { get; set; }
+        public List<ModelListDto> Models { get; set; }
     }
 }

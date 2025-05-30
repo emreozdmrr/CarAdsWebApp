@@ -14,5 +14,7 @@ namespace CarAdsWebApp.Entities
         public AppUser Receiver { get; set; }
         public string Description { get; set; }
         public DateTime MessageDate { get; set; } = DateTime.Now;
+        public int AdvertisementId { get; set; }
+        public Advertisement Advertisement { get; set; }
     }
 }

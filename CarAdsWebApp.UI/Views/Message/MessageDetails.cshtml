@@ -1,0 +1,70 @@
+﻿@model List<MessageListDto>
+@{
+	Layout = "_Layout";
+}
+
+<div class="container">
+	<div class="d-flex justify-content-end mt-3">
+		<a asp-action="Detail" asp-controller="Advertisement" asp-route-id="@Model[0].Advertisement.Id" class="btn btn-success">İlana Git</a>
+	</div>
+
+		@if(ViewBag.User == "Receiver")
+		{
+			<div class="alert alert-primary my-3">
+				<a asp-action="Detail" asp-controller="Advertisement" asp-route-id="@Model[0].Advertisement.Id">@Model[0].Advertisement.Id</a> No'lu ilan için @Model[0].Sender.Firstname @Model[0].Sender.Surname kullanıcısından gelen mesajlar
+			</div>
+		}
+		@if(ViewBag.User == "Sender")
+		{
+			<div class="alert alert-primary my-3">
+				<a asp-action="Detail" asp-controller="Advertisement" asp-route-id="@Model[0].Advertisement.Id">@Model[0].Advertisement.Id</a> No'lu ilan için @Model[0].Receiver.Firstname @Model[0].Receiver.Surname kullanıcısı ile mesajlar
+			</div>
+		}
+	@{
+		if(Model[0].Id > 0)
+		{
+			<div class="list-group mt-3">
+				@foreach(var message in Model)
+				{
+					<div class="list-group-item">
+						<div class="d-flex justify-content-start">
+							<h5 class="mb-5">@message.Sender.Firstname</h5>
+						</div>
+						<p class="mb-1">@message.Description</p>
+						@if(DateTime.Now.ToString("dd-MM-yyyy") == message.MessageDate.ToString("dd-MM-yyyy"))
+						{
+							<label class="form-label d-flex justify-content-end">@message.MessageDate.ToString("HH:mm")</label>
+						}
+						else
+						{
+							<label class="form-label d-flex justify-content-end">@message.MessageDate.ToString("dd.MM.yyyy")</label>
+						}
+					</div>
+				}
+			</div>
+		}
+	}
+
+	<div class="my-3">
+		<form asp-action="MessageDetails" asp-controller="Message" method="post">
+			<input type="hidden" name="AdvertisementId" value="@Model[0].Advertisement.Id" />
+			@if(ViewBag.User == "Receiver")
+			{
+				<input type="hidden" id="ReceiverId" name="ReceiverId" value="@Model[0].SenderId" />
+				<input type="hidden" id="SenderId" name="SenderId" value="@Model[0].ReceiverId" />
+			}
+			@if(ViewBag.User == "Sender")
+			{
+				<input type="hidden" id="ReceiverId" name="ReceiverId" value="@Model[0].ReceiverId" />
+				<input type="hidden" id="SenderId" name="SenderId" value="@Model[0].SenderId" />
+			}
+			<div class="mb-3">
+				<textarea class="form-control" id="Description" name="Description" placeholder="Mesajınız"></textarea>
+			</div>
+			<button type="submit" class="btn btn-primary">Gönder</button>
+		</form>
+	</div>
+	<div class="lead text-danger" asp-validation-summary="All">
+
+	</div>
+</div>

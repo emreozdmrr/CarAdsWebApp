@@ -1,0 +1,378 @@
+﻿@model IPagedList<AdvertisementListViewModel>
+
+@{
+	Layout = "_Layout";
+	var viewType = ViewBag.ViewType;
+	var sortType = ViewBag.SortType;
+	var makeId = ViewBag.MakeId;
+	var modelId = ViewBag.ModelId;
+	var minPrice = Context.Request.Query["MinPrice"];
+	var maxPrice = Context.Request.Query["MaxPrice"];
+	var cityId = Context.Request.Query["CityId"];
+	var minYear = Context.Request.Query["MinYear"];
+	var maxYear = Context.Request.Query["MaxYear"];
+	var bodyTypeId = Context.Request.Query["BodyTypeId"];
+	var gearBoxId = Context.Request.Query["GearBoxId"];
+}
+
+
+
+<div class="container">
+	<div class="row mt-3">
+		<div class="col-2">
+		</div>
+		<div class="mt-3 mb-3 d-flex justify-content-between align-items-center col-10 bg-dark py-3 rounded" style="overflow:hidden; border-radius:10px;">
+			<div class="px-2 text-white">
+				<i data-bs-toggle="tooltip" title="Kart Görünümü" class="fa-solid fa-table-cells-large fa-2x" style="margin-left:20px;" id="grid"></i>
+				<i data-bs-toggle="tooltip" title="Liste Görünümü" class="fa-solid fa-table-list fa-2x mx-2"  id="list"></i>
+			</div>
+			<select class="form-select w-25 px-2" onchange="sortTypeChanged()" id="sortType">
+				<option value="dateDESC" selected>Tarihe Göre (En Yeni)</option>
+				<option value="dateASC">Tarihe Göre (En Eski)</option>
+				<option value="priceASC">Fiyata Göre (Artan)</option>
+				<option value="priceDESC">Fiyata Göre (Azalan)</option>
+			</select>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-2">
+
+		</div>
+		<div class="col-md-10">
+			@{
+				if (Model[0].Id > 0)
+				{
+					if (ViewBag.MakeId == null)
+					{
+								<div class="alert alert-dark">
+									'@Model.TotalItemCount' sonuç listelendi.
+								</div>
+					}
+					else if (ViewBag.ModelId == null)
+					{
+								<div class="alert alert-dark">
+									@Model[0].Make.Definition araması için '@Model.TotalItemCount' sonuç listelendi.
+								</div>
+					}
+					else
+					{
+								<div class="alert alert-dark">
+									@Model[0].Make.Definition - @Model[0].Model.Definition araması için '@Model.TotalItemCount' sonuç listelendi.
+								</div>
+					}
+				}
+				else
+				{
+							<div class="alert alert-dark">
+								'0' sonuç listelendi.
+							</div>
+				}
+			}
+		</div>
+	</div>
+		<div class="row">
+
+			<div class="col-md-2 my-2">
+			<ul class="list-group fs-7" id="makeList" style="max-height:500px; overflow-y:auto;">
+					@foreach (var make in ViewBag.makeList)
+					{
+						<li class="list-group-item" data-makeId="@make.Id">
+							@make.Definition (@(make.Count))
+							@if (makeId == make.Id)
+							{
+								<ul id="modelList" class="list-group ms-1 border-start border-2" style="border:none;">
+									@foreach (var _model in ViewBag.modelList)
+									{
+										<li class="list-group-item py-1" id="modelClick" data-modelId="@_model.Id" style="border:none;">@_model.Definition (@(_model.Count))</li>
+									}
+								</ul>
+							}
+						</li>
+
+					}
+				</ul>
+
+				<div class="mt-3">
+				  <div class="mt-3 accordion" id="accordion" style="max-height:500px; overflow-y:auto; padding:5px;">
+					<div class="accordion-item">
+						<h2 class="accordion-header">
+							<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1" aria-expanded="true" aria-controls="collapse1">
+								Fiyat
+							</button>
+						</h2>
+						<div id="collapse1" class="accordion-collapse collapse">
+							<div class="accordion-body">
+								<input id="minPrice" asp-for="@Model[0].AdvertisementSearch.MinPrice" type="text" placeholder="Min. Fiyat" class="form-control" />
+								<input id="maxPrice" asp-for="@Model[0].AdvertisementSearch.MaxPrice" type="text" placeholder="Max. Fiyat" class="form-control mt-1" />
+							</div>
+						</div>
+					</div>
+					<div class="accordion-item">
+						<h2 class="accordion-header">
+							<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2" aria-expanded="true" aria-controls="collapse2">
+								Adres
+							</button>
+						</h2>
+						<div id="collapse2" class="accordion-collapse collapse">
+							<div class="accordion-body">
+								<select asp-for="@Model[0].AdvertisementSearch.CityId" name="cityId" id="cityId" class="form-select" style="font-size:13px;" asp-items="@ViewBag.Cities">
+									<option value="">Şehir Seçiniz</option>
+								</select>
+							</div>
+						</div>
+					</div>
+				  	<div class="accordion-item">
+						<h2 class="accordion-header">
+							<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3" aria-expanded="true" aria-controls="collapse3">
+								Yıl
+							</button>
+						</h2>
+						<div id="collapse3" class="accordion-collapse collapse">
+							<div class="accordion-body">
+								<input id="minYear" asp-for="@Model[0].AdvertisementSearch.MinYear" type="number" placeholder="Min." class="form-control w-75" />
+								<input id="maxYear" asp-for="@Model[0].AdvertisementSearch.MaxYear" type="number" placeholder="Max." class="form-control w-75 mt-1" />
+							</div>
+						</div>
+					</div>
+					<div class="accordion-item">
+						<h2 class="accordion-header">
+							<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse5" aria-expanded="true" aria-controls="collapse5">
+								Kasa Tipi
+							</button>
+						</h2>
+						<div id="collapse5" class="accordion-collapse collapse">
+							<div class="accordion-body">
+								<select id="BodyType" asp-for="@Model[0].AdvertisementSearch.BodyTypeId" style="font-size:9px;" class="form-select" asp-items="@ViewBag.BodyTypes">
+									<option value="">Kasa Tipi Seçiniz</option>
+								</select>
+							</div>
+						</div>
+					</div>
+					<div class="accordion-item">
+						<h2 class="accordion-header">
+							<button class="accordion-button collapsed" asp-for="@Model[0].AdvertisementSearch.GearBoxId" type="button" data-bs-toggle="collapse" data-bs-target="#collapse6" aria-expanded="true" aria-controls="collapse6">
+								Vites Tipi
+							</button>
+						</h2>
+						<div id="collapse6" class="accordion-collapse collapse">
+							<div class="accordion-body">
+								<select id="GearBox" style="font-size:10px;" asp-for="@Model[0].AdvertisementSearch.GearBoxId" class="form-select" asp-items="ViewBag.GearBoxes">
+									<option value="">Vites Tipi Seçiniz</option>
+								</select>
+							</div>
+						</div>
+					</div>
+					
+				  
+				  <div class="mt-3">
+					  <button class="btn btn-success btn-md w-100" id="searchButton" >
+						  Ara
+					  </button>
+				  </div>
+				</div>
+				  </div>
+				
+				
+			</div>
+
+			@if (viewType == "Grid" && Model[0].Id > 0)
+			{
+				<div class="col-md-10 my-2">
+					<div class="row">
+					@foreach (var advertisement in Model)
+					{
+						<div class="col-md-3 mb-2">
+							<div class="card">
+								<img src="@advertisement.ImageUrl" class="card-img-top" style="object-fit:cover; height:200px; width:100%; padding:2px;" />
+								<div class="card-body">
+									<h5 class="card-title">@advertisement.Make.Definition - @advertisement.Model.Definition</h5>
+									<p class="card-text">@advertisement.Title</p>
+									<p class="card-text">Yıl: @advertisement.Year</p>
+									<p class="card-text">Fiyat: @advertisement.Price.ToString("C0").Replace("₺","") TL</p>
+									<a style="text-decoration:none;" asp-action="Detail" asp-controller="Advertisement" asp-route-id="@advertisement.Id">İncele</a>
+								</div>
+							</div>
+						</div>
+					}
+					</div>
+				</div>
+			}
+			else if(viewType == "List" && Model[0].Id > 0)
+			{
+				<div class="col-md-10 my-2">
+				<div class="row">
+					<table class="table table-sm table-hover table-striped table-bordered" style="border-radius:10px; overflow:hidden;">
+						<thead>
+							<tr>
+								<th class="col-2 py-3 text-center">Resim</th>
+								<th class="col-2 py-3 text-center">İlan Başlık</th>
+								<th class="col-2 py-3 text-center">Yayınlanma Tarihi</th>
+								<th class="col-1 py-3 text-center">Marka</th>
+								<th class="col-1 py-3 text-center">Model</th>
+								<th class="col-1 py-3 text-center">Fiyat</th>
+							</tr>
+						</thead>
+						<tbody>
+							@foreach (var advertisement in Model)
+							{
+								<tr class="detail" data-href="@Url.Action("Detail","Advertisement",new {id = advertisement.Id})">
+									<td class="align-middle p-3"><img src="@advertisement.ImageUrl" class="img-thumbnail img-fluid" style="object-fit:cover; height:120px; width:100%;" alt="..." /></td>
+									<td class="align-middle text-center">@advertisement.Title</td>
+									<td class="align-middle text-center">@advertisement.CreatedDate.ToString("dd MMMM yyyy", new CultureInfo("tr-TR"))</td>
+									<td class="align-middle text-center">@advertisement.Make.Definition</td>
+									<td class="align-middle text-center">@advertisement.Model.Definition</td>
+									<td class="align-middle text-center">@advertisement.Price.ToString("C0").Replace("₺","") TL</td>
+								</tr>
+							}
+						</tbody>
+					</table>
+				</div>
+				</div>
+			}
+			else
+			{
+				<div class="col-md-10 lead text-center" asp-validation-summary="All">
+
+				</div>
+			}
+			<div class="col-md-2">
+
+			</div>
+			<div class="col-md-10">
+				@Html.PagedListPager(Model, page => Url.Action("ListAdvertisement", new
+				{
+					page,
+					viewType = viewType,
+					sortType = sortType,
+					MinPrice = string.IsNullOrEmpty(minPrice) ? Microsoft.Extensions.Primitives.StringValues.Empty : minPrice,
+					MaxPrice = string.IsNullOrEmpty(maxPrice) ? Microsoft.Extensions.Primitives.StringValues.Empty : maxPrice,
+					MinYear = string.IsNullOrEmpty(minYear) ? Microsoft.Extensions.Primitives.StringValues.Empty : minYear,
+					MaxYear = string.IsNullOrEmpty(maxYear) ? Microsoft.Extensions.Primitives.StringValues.Empty : maxYear,
+					CityId = string.IsNullOrEmpty(cityId) ? Microsoft.Extensions.Primitives.StringValues.Empty : cityId,
+					BodyTypeId = string.IsNullOrEmpty(bodyTypeId) ? Microsoft.Extensions.Primitives.StringValues.Empty : bodyTypeId,
+					GearBoxId = string.IsNullOrEmpty(gearBoxId) ? Microsoft.Extensions.Primitives.StringValues.Empty : gearBoxId,
+					MakeId = makeId,
+					ModelId = modelId,
+				}), new X.PagedList.Mvc.Common.PagedListRenderOptionsBase
+				{
+					LiElementClasses = new List<string>
+							{"page-link"}
+				})
+			</div>
+		</div>
+		
+	
+</div>
+
+
+<style>
+	ul li{
+		list-style-type:none;
+	}
+</style>
+
+@section script {
+	<script>
+		$(".detail").click(function () {
+			window.location = $(this).data("href");
+		});
+		
+
+		$(document).ready(function () {
+
+			var minPrice = new AutoNumeric('#minPrice', {
+				currencySymbol: '₺',
+				decimalCharacter: ',',
+				digitGroupSeparator: '.',
+				decimalPlaces: 2
+			});
+			var maxPrice = new AutoNumeric('#maxPrice', {
+				currencySymbol: '₺',
+				decimalCharacter: ',',
+				digitGroupSeparator: '.',
+				decimalPlaces: 2
+			});
+
+			$(document).on('click', '#makeList li', function (event) {
+				 var makeId = $(this).data('makeid');
+				location.href = setUrl({_makeId : makeId , _modelId : ""});
+			});
+
+			function setUrl({viewType = '@ViewBag.ViewType', _makeId = '@ViewBag.MakeId', _modelId = '@ViewBag.ModelId' } = {}){
+				var _minPrice = minPrice.get();
+				$('#minPrice').val(_minPrice);
+				var _maxPrice = maxPrice.get();
+				$('#maxPrice').val(_maxPrice);
+				var minPriceValue = $('#minPrice').val();
+				var maxPriceValue = $('#maxPrice').val();
+				var selectedCity = document.getElementById('cityId');
+				var minYear = $('#minYear').val();
+				var maxYear = $('#maxYear').val();
+				var minKm = $('#minKm').val();
+				var maxKm = $('#maxKm').val();
+				var selectedBodyType = document.getElementById('BodyType');
+				var selectedGearBox = document.getElementById('GearBox');
+
+				var urlParams = new URLSearchParams(location.search);
+				var modelId = _modelId;
+				var makeId = _makeId;
+				var selectedSortType = document.getElementById('sortType');
+				var url = '@Url.Action("ListAdvertisement")';
+				url += "?viewType=" + viewType + "&sortType=" + selectedSortType.value;
+				if(makeId)
+					url+= "&makeId=" + makeId;
+				if(modelId)	
+					url+= "&modelId=" + modelId;
+				if(minPriceValue)
+					url += "&MinPrice=" + minPriceValue;
+				if(maxPriceValue)	
+					url+= "&MaxPrice=" + maxPriceValue;
+				if(selectedCity.value)	
+					url+= "&CityId=" + selectedCity.value;
+				if(minYear)	
+					url+= "&MinYear=" + minYear;
+				if(maxYear)	
+					url+= "&MaxYear=" +maxYear;
+				if(minKm)
+					url += "&MinKm=" + minKm;
+				if(maxKm)	
+					url+= "&MaxKm=" + maxKm;
+				if(selectedBodyType.value)
+					url+= "&BodyTypeId=" + selectedBodyType.value;
+				if(selectedGearBox.value)
+					url+= "&GearBoxId=" + selectedGearBox.value;
+				return url;
+			}
+
+			$(document).on('click', '#modelClick', function (event) {
+				event.stopPropagation();
+				var modelId = $(this).data('modelid');
+				location.href = setUrl({ _modelId : modelId});
+			});
+
+			document.getElementById('sortType').addEventListener('change', function () {
+				location.href = setUrl();
+			});
+
+			$('#grid').click(function () {
+				location.href = setUrl({ viewType: 'Grid'});
+			});
+
+			$('#list').click(function (){
+				location.href = setUrl({ viewType : 'List'});
+			});
+			
+
+			$(document).on('click', '#searchButton', function () {
+				location.href = setUrl();
+			});
+		});
+
+		document.addEventListener('DOMContentLoaded', function () {
+			var currentValue = document.getElementById('sortType');
+			var sortType = '@ViewBag.SortType';
+			currentValue.value = sortType;
+		});
+	</script>
+}

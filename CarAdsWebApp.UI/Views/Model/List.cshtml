@@ -1,0 +1,59 @@
+﻿@model IPagedList<ModelListDto>
+
+@{
+	Layout = "_AdminLayout";
+}
+
+@if (ViewBag.Error != null)
+{
+	<div class="text-center alert alert-danger mt-3">
+		@ViewBag.Error
+	</div>
+}
+
+<div class="text-end p-1 mt-3">
+	<a class="btn btn-success btn-lg" asp-action="Create" asp-controller="Model">Yeni Model</a>
+</div>
+<div>
+	@if (Model.Count > 0)
+	{
+		<table class="mt-3 table table-sm table-hover table-striped table-bordered" style="border-radius:10px; overflow:hidden;">
+			<thead>
+				<tr>
+					<th class="col-2 py-4 text-center">Model No</th>
+					<th class="col-4 py-4 text-center">Model Adı</th>
+					<th class="col-3 py-4 text-center">Marka</th>
+					<th colspan="2" class="col-3 py-4 text-center">İşlem</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var _model in Model)
+				{
+					<tr class="detail" data-href="@Url.Action("Update", "Model", new { id = _model.Id })">
+						<td class="align-middle text-center">@_model.Id</td>
+						<td class="align-middle text-center">@_model.Definition</td>
+						<td class="align-middle text-center">@_model.Make.Definition</td>
+						<td class="align-middle text-center"><a asp-action="Update" asp-controller="Model" asp-route-id="@_model.Id" class="btn btn-primary">Düzenle</a></td>
+						@if (_model.Advertisements.Count == 0)
+						{
+							<td class="align-middle text-center"><a asp-action="Delete" asp-controller="Model" asp-route-id="@_model.Id" class="btn btn-danger">Sil</a></td>
+						}
+					</tr>
+				}
+			</tbody>
+		</table>
+	}
+	else
+	{
+		<div class="mt-3 text-center lead alert alert-danger">
+			Model bulunamadı.
+		</div>
+	}
+</div>
+
+@Html.PagedListPager(Model, page => Url.Action("List", new { page }), new X.PagedList.Mvc.Common.PagedListRenderOptionsBase
+{
+	LiElementClasses = new List<string>
+	{"page-link"}
+})
+

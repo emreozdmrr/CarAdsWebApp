@@ -1,0 +1,47 @@
+﻿
+@{
+	Layout = "_Layout";
+}
+<div class="container">
+	<div class="alert alert-info text-center lead mt-3">
+		UYGULAMA İSTATİSTİKLERİ
+	</div>
+	<div class="row">
+		<div class="col-md-6 text-center alert alert-success">
+			<a asp-action="ChartByDate" asp-controller="Advertisement">Tarih Bazlı Yeni İlan</a>
+		</div>
+		<div class="col-md-6 text-center alert alert-success">
+			<a asp-action="ChartByMake" asp-controller="Advertisement">Marka Bazlı Yeni İlan</a>
+		</div>
+	</div>
+	<canvas id="barChart" style="margin:auto;" width="600" height="400"></canvas>
+</div>
+
+@section script{
+	<script>
+		var barChart = document.getElementById('barChart').getContext('2d');
+		var chart = new Chart(barChart, {
+			type: 'bar',
+			data: {
+				labels: @Html.Raw(Json.Serialize(ViewBag.Labels)),
+				datasets: [{
+					label: 'Yeni İlan',
+					data: @Html.Raw(Json.Serialize(ViewBag.Data)),
+					backgroundColor: 'rgba(54, 162, 235, 0.6)',
+					borderColor: 'rgba(54, 162, 235, 1)',
+					borderWidth: 1
+				}]
+			},
+			options: {
+				responsive: false,
+				maintainAspectRatio: false,
+				scales: {
+					y: {
+						beginAtZero: true,
+						stepSize: 5
+					}
+				}
+			}
+		});
+	</script>
+}

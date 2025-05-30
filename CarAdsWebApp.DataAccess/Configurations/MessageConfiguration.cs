@@ -16,6 +16,7 @@ namespace CarAdsWebApp.DataAccess.Configurations
             builder.HasOne(x => x.Sender).WithMany(x => x.SentMessages).HasForeignKey(x => x.SenderId).OnDelete(DeleteBehavior.Restrict);
             builder.HasOne(x => x.Receiver).WithMany(x => x.ReceivedMessages).HasForeignKey(x => x.ReceiverId).OnDelete(DeleteBehavior.Restrict);
             builder.Property(x => x.Description).HasMaxLength(400).IsRequired();
+            builder.HasOne(x => x.Advertisement).WithMany(x => x.Messages).HasForeignKey(x => x.AdvertisementId).OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

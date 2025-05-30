@@ -5,11 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CarAdsWebApp.Dtos.GearBoxDtos
+namespace CarAdsWebApp.Dtos
 {
     public class GearBoxListDto:IDto
     {
         public int Id { get; set; }
         public string Definition { get; set; }
+        public List<AdvertisementListDto> Advertisements { get; set; }
     }
 }

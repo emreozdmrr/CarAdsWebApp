@@ -311,6 +311,9 @@ namespace CarAdsWebApp.DataAccess.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("AdvertisementId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(400)
@@ -326,6 +329,8 @@ namespace CarAdsWebApp.DataAccess.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AdvertisementId");
 
                     b.HasIndex("ReceiverId");
 
@@ -428,6 +433,12 @@ namespace CarAdsWebApp.DataAccess.Migrations
 
             modelBuilder.Entity("CarAdsWebApp.Entities.Message", b =>
                 {
+                    b.HasOne("CarAdsWebApp.Entities.Advertisement", "Advertisement")
+                        .WithMany("Messages")
+                        .HasForeignKey("AdvertisementId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("CarAdsWebApp.Entities.AppUser", "Receiver")
                         .WithMany("ReceivedMessages")
                         .HasForeignKey("ReceiverId")
@@ -439,6 +450,8 @@ namespace CarAdsWebApp.DataAccess.Migrations
                         .HasForeignKey("SenderId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("Advertisement");
 
                     b.Navigation("Receiver");
 
@@ -454,6 +467,11 @@ namespace CarAdsWebApp.DataAccess.Migrations
                         .IsRequired();
 
                     b.Navigation("Make");
+                });
+
+            modelBuilder.Entity("CarAdsWebApp.Entities.Advertisement", b =>
+                {
+                    b.Navigation("Messages");
                 });
 
             modelBuilder.Entity("CarAdsWebApp.Entities.AppRole", b =>

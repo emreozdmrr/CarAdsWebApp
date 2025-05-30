@@ -1,0 +1,23 @@
+﻿
+@{
+	Layout = "_Layout";
+}
+
+<div class="container">
+	<div class="row">
+		<div class="col-md-2" style="margin-top:88px;">
+			<ul class="list-group">
+				<li class="list-group-item py-3"><a asp-action="ListByUserId" asp-controller="Advertisement">İlanlarım</a></li>
+				<li class="list-group-item py-3"><a asp-action="ReceivedMessages" asp-controller="Message">Alınan Mesajlar</a></li>
+				<li class="list-group-item py-3"><a asp-action="SentMessages" asp-controller="Message">Gönderilen Mesajlar</a></li>
+				<li class="list-group-item py-3"><a asp-action="Update" asp-controller="User">Bilgilerim</a></li>
+			</ul>
+		</div>
+		<div class="col-md-10">
+			@RenderBody()
+		</div>
+	</div>
+
+</div>
+
+@RenderSection("script", required: false)

@@ -1,0 +1,23 @@
+﻿@model MakeCreateDto
+
+@{
+	Layout = "_Layout";
+}
+
+<div class="container py-5 rounded-lg d-flex justify-content-center">
+
+	<form class="w-75 bg-light px-5 py-3" style="border-radius:50px; overflow:hidden;" asp-action="Create" asp-controller="Make" method="post">
+		<div class="mb-5 mt-3 d-flex justify-content-center">
+			<label class="font-weight-bold h4 text-primary">YENİ MARKA</label>
+		</div>
+		<div class="mb-3">
+			<label class="form-label">Marka Açıklama</label>
+			<input type="text" class="form-control" asp-for="@Model.Definition" />
+		</div>
+		<div class="mb-3 text-end">
+			<button type="submit" class="btn btn-success btn-lg w-25">Kaydet</button>
+		</div>
+		<div class="mb-3 text-danger" asp-validation-summary="All">
+		</div>
+	</form>
+</div>

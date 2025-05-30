@@ -12,5 +12,7 @@ namespace CarAdsWebApp.Dtos
         public int Id { get; set; }
         public string Definition { get; set; }
         public int MakeId { get; set; }
+        public MakeListDto Make { get; set; }
+        public List<AdvertisementListDto> Advertisements { get; set; }
     }
 }

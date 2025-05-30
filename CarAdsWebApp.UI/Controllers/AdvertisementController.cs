@@ -1,20 +1,25 @@
 ﻿using AutoMapper;
 using CarAdsWebApp.Business.Interfaces;
 using CarAdsWebApp.Common;
+using CarAdsWebApp.DataAccess.UnitOfWork;
 using CarAdsWebApp.Dtos;
 using CarAdsWebApp.Dtos.Interfaces;
+using CarAdsWebApp.Entities;
 using CarAdsWebApp.UI.Extensions;
 using CarAdsWebApp.UI.Models;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using X.PagedList;
 
 namespace CarAdsWebApp.UI.Controllers
 {
@@ -29,7 +34,8 @@ namespace CarAdsWebApp.UI.Controllers
 		private readonly IValidator<AdvertisementCreateModel> _advertisementCreateModelValidator;
 		private readonly IValidator<AdvertisementUpdateModel> _advertisementUpdateModelValidator;
 		private readonly IMapper _mapper;
-		public AdvertisementController(IAdvertisementService advertisementService, IMakeService makeService, IModelService modelService, ICityService cityService, IBodyTypeService bodyTypeService, IGearBoxService gearBoxService, IValidator<AdvertisementCreateModel> advertisementCreateModelValidator, IValidator<AdvertisementUpdateModel> advertisementUpdateModelValidator, IMapper mapper)
+		private readonly IUow _uow;
+		public AdvertisementController(IAdvertisementService advertisementService, IMakeService makeService, IModelService modelService, ICityService cityService, IBodyTypeService bodyTypeService, IGearBoxService gearBoxService, IValidator<AdvertisementCreateModel> advertisementCreateModelValidator, IValidator<AdvertisementUpdateModel> advertisementUpdateModelValidator, IMapper mapper, IUow uow)
 		{
 			_advertisementService = advertisementService;
 			_makeService = makeService;
@@ -40,13 +46,15 @@ namespace CarAdsWebApp.UI.Controllers
 			_advertisementCreateModelValidator = advertisementCreateModelValidator;
 			_advertisementUpdateModelValidator = advertisementUpdateModelValidator;
 			_mapper = mapper;
+			_uow = uow;
 		}
 
 		[Authorize(Roles = "User")]
-		public async Task<IActionResult> ListByUserId()
+		public async Task<IActionResult> ListByUserId(int page = 1)
 		{
+			int pageSize = 5;
 			var userId = int.Parse(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value);
-			var response = await _advertisementService.ListByAppUserIdAsync(userId);
+			var response = await _advertisementService.ListByAppUserIdAsync(userId, page, pageSize);
 			if (response.ResponseType == ResponseType.Success)
 			{
 				return this.ResponseView(response);
@@ -58,7 +66,7 @@ namespace CarAdsWebApp.UI.Controllers
 			}
 		}
 
-		public async void SelectLists()
+		public async Task SelectLists()
 		{
 			var makeListResponse = await _makeService.GetAllAsync();
 			ViewBag.Makes = new SelectList(makeListResponse.Data, "Id", "Definition");
@@ -71,9 +79,9 @@ namespace CarAdsWebApp.UI.Controllers
 		}
 
 		[Authorize(Roles = "User")]
-		public IActionResult CreateAdvertisement()
+		public async Task<IActionResult> CreateAdvertisement()
 		{
-			SelectLists();
+			await SelectLists();
 			var userId = int.Parse((User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)).Value);
 			return View(new AdvertisementCreateModel
 			{
@@ -102,7 +110,7 @@ namespace CarAdsWebApp.UI.Controllers
 				var response = await _advertisementService.CreateAsync(dto);
 				if (response.ResponseType == ResponseType.Success)
 				{
-					return RedirectToAction("Index", "Home");
+					return RedirectToAction("ListByUserId", "Advertisement");
 				}
 				foreach (var error in response.ValidationErrors)
 				{
@@ -112,7 +120,7 @@ namespace CarAdsWebApp.UI.Controllers
 			}
 			else
 			{
-				SelectLists();
+				await SelectLists();
 				foreach (var error in validationResult.Errors)
 				{
 					ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
@@ -142,7 +150,7 @@ namespace CarAdsWebApp.UI.Controllers
 			var response = await _advertisementService.CheckAdvertisementById(advertisementId, appUserId);
 			if (response.ResponseType == ResponseType.Success)
 			{
-				SelectLists();
+				await SelectLists();
 				var model = _mapper.Map<AdvertisementUpdateModel>(response.Data);
 				model.currentImageUrl = response.Data.ImageUrl;
 				return View(model);
@@ -180,7 +188,7 @@ namespace CarAdsWebApp.UI.Controllers
 					{
 						ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
 					}
-					SelectLists();
+					await SelectLists();
 					return View(model);
 				}
 			}
@@ -190,9 +198,85 @@ namespace CarAdsWebApp.UI.Controllers
 				{
 					ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
 				}
-				SelectLists();
+				await SelectLists();
 				return View(model);
 			}
+		}
+
+		public async Task<IActionResult> ListAdvertisement(int page = 1, string viewType = "Grid", string sortType = "dateDESC", string makeId = "", string modelId = "", AdvertisementSearchModel searchModel = null)
+		{
+			int pageSize = 8;
+			ViewBag.ViewType = viewType;
+			ViewBag.SortType = sortType;
+			await SelectLists();
+			if (!string.IsNullOrEmpty(makeId))
+			{
+				ViewBag.MakeId = Convert.ToInt32(makeId);
+				var modelListResponse = await _modelService.GetModelsWithCountAsync(Convert.ToInt32(makeId));
+				if (modelListResponse.ResponseType == ResponseType.Success)
+					ViewBag.modelList = modelListResponse.Data;
+
+			}
+			if (!string.IsNullOrEmpty(modelId))
+				ViewBag.ModelId = Convert.ToInt32(modelId);
+			var makeListResponse = await _makeService.MakeListWithCount();
+			ViewBag.makeList = makeListResponse.Data;
+			var searchDto = _mapper.Map<AdvertisementSearchDto>(searchModel);
+			var response = await _advertisementService.ListAdvertisementAsync(sortType, makeId == "" ? 0 : Convert.ToInt32(makeId), modelId == "" ? 0 : Convert.ToInt32(modelId), searchDto, page, pageSize);
+			if (response.ResponseType == ResponseType.Success)
+			{
+				var viewModel = _mapper.Map<IPagedList<AdvertisementListViewModel>>(response.Data);
+				if (viewModel.Count > 0)
+					viewModel[0].AdvertisementSearch = searchModel;
+				return View(viewModel);
+			}
+			else
+			{
+				ModelState.AddModelError("", response.Message);
+				var model = new List<AdvertisementListViewModel>
+				{
+					new AdvertisementListViewModel
+					{
+						AdvertisementSearch = searchModel,
+					}
+				};
+				return View(model.ToPagedList(page, pageSize));
+			}
+		}
+
+
+		public async Task<IActionResult> Detail(int id)
+		{
+			if (User.Identity.IsAuthenticated)
+			{
+				var appUserId = int.Parse(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value);
+				ViewBag.AppUserId = appUserId;
+			}
+			var response = await _advertisementService.DetailByIdAsync(id);
+			if (response.ResponseType == ResponseType.Success)
+			{
+				return View(response.Data);
+			}
+			ModelState.AddModelError("", response.Message);
+			return View();
+		}
+
+		[Authorize(Roles = "Admin")]
+		public async Task<IActionResult> ChartByDate()
+		{
+			var response = await _advertisementService.ChartByDate();
+			ViewBag.Labels = response.Data.Labels;
+			ViewBag.Data = response.Data.Data;
+			return View();
+		}
+
+		[Authorize(Roles = "Admin")]
+		public async Task<IActionResult> ChartByMake()
+		{
+			var response = await _advertisementService.ChartByMake();
+			ViewBag.Labels = response.Data.Labels;
+			ViewBag.Data = response.Data.Data;
+			return View();
 		}
 	}
 }

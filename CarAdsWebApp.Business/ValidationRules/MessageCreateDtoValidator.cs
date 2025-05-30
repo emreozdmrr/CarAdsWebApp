@@ -15,6 +15,7 @@ namespace CarAdsWebApp.Business.ValidationRules
             RuleFor(x=>x.SenderId).NotEmpty();
             RuleFor(x=>x.ReceiverId).NotEmpty();
             RuleFor(x=>x.Description).NotEmpty();
+            RuleFor(x=>x.AdvertisementId).NotEmpty();
         }
     }
 }
